@@ -7,10 +7,16 @@ namespace CardValidationService.Tests
     [TestClass]
     public class WebUnitTests
     {
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
+        {
+            DbUnitTests.SetupTestDB();
+        }
+
         void WebTestCard(CardTestInfo cardInfo)
         {
-            var api = new DefaultApiController();
-            var res = api.Validate(cardInfo.Number);
+            var api = new CardValidationApiController();
+            var res = (ValidationResult)api.Validate(cardInfo.NumberString);
             Assert.AreEqual(cardInfo.Type, res.CardType);
             Assert.AreEqual(cardInfo.Status, res.ValidationStatus);
         }

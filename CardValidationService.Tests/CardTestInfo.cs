@@ -9,12 +9,14 @@ namespace CardValidationService.Tests
         {
             Type = type;
             Number = number;
+            NumberString = number.ToString();
             ExpiryDate = expiryDate;
             Status = status;
         }
 
         public readonly string Type;
         public readonly decimal Number;
+        public readonly string NumberString;
         public readonly DateTime? ExpiryDate;
         public readonly string Status;
 

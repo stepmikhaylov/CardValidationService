@@ -9,9 +9,14 @@ namespace CardValidationService.Tests
     [TestClass]
     public class DbUnitTests
     {
-        [AssemblyInitialize]
-        public static void AssemblyInitialize(TestContext testContext)
+        static bool IsDbSet { get; set; } = false;
+
+        static public void SetupTestDB()
         {
+            if (IsDbSet)
+                return;
+            IsDbSet = true;
+
             string cs = CardValidationServiceDB.DefaultConnectionString;
             var ecb = new System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder(cs);
             var cb = new System.Data.SqlClient.SqlConnectionStringBuilder(ecb.ProviderConnectionString)
@@ -49,6 +54,12 @@ EXTERNAL NAME [CardValidationServiceDB].[UserDefinedFunctions].[IsPrimeNumber]")
 
                 db.SaveChanges();
             }
+        }
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
+        {
+            SetupTestDB();
         }
 
         void DbTestCard(CardTestInfo cardInfo)

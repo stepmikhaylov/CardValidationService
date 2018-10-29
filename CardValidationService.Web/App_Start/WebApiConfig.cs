@@ -14,7 +14,7 @@ namespace CardValidationService.Web
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{action}",
-                defaults: new { controller = "DefaultApi" }
+                defaults: new { controller = "CardValidationApi" }
             );
         }
     }
