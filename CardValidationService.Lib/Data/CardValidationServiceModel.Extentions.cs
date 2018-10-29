@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using CardValidationService.Logging;
 
 namespace CardValidationService.Data
 {
@@ -25,17 +24,19 @@ namespace CardValidationService.Data
         public static string DefaultConnectionString { get; set; }
             = System.Configuration.ConfigurationManager.ConnectionStrings["CardValidationServiceDB"].ConnectionString;
 
+        NLog.Logger Logger { get; } = NLog.LogManager.GetLogger("DB");
+
         public ValidateCard_Result ValidateCard(decimal cardNumber)
         {
             try
             {
                 var res = raw_ValidateCard(cardNumber).Single();
-                Logger.Info("DB.ValidateCard", $"card={cardNumber} type={res.CardType} status={res.ValidationStatus}");
+                Logger.Info($"ValidateCard card={cardNumber} type={res.CardType} status={res.ValidationStatus}");
                 return res;
             }
             catch (Exception e)
             {
-                Logger.Error("DB.ValidateCard", $"card={cardNumber}", e);
+                Logger.Error(e, $"ValidateCard card={cardNumber}");
                 throw;
             }
         }
