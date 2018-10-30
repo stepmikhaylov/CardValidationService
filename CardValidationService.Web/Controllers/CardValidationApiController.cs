@@ -1,13 +1,30 @@
 ﻿using System;
 using System.Web.Http;
-using CardValidationService.Data;
+using CardValidationService.Repositories;
 using CardValidationService.Web.Models;
 
 namespace CardValidationService.Web.Controllers
 {
     public class CardValidationApiController : ApiController
     {
+        public CardValidationApiController(ICardValidationServiceRepository repository)
+        {
+            Repository = repository;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+                Repository?.Dispose();
+        }
+
         readonly NLog.Logger Logger = NLog.LogManager.GetLogger("WEB");
+        readonly ICardValidationServiceRepository Repository;
+
+        [HttpGet]
+        public object Index()
+            => Redirect(new Uri("/swagger/ui/index", UriKind.Relative));
 
         /// <summary>
         /// Validate card number
@@ -25,16 +42,13 @@ namespace CardValidationService.Web.Controllers
                 if (cardNumberDec == null)
                     return BadRequest($"Invalid card number");
 
-                using (var db = new CardValidationServiceDB())
-                {
-                    var res = db.ValidateCard(cardNumberDec.Value);
+                var res = Repository.ValidateCard(cardNumberDec.Value);
 
-                    return new ValidationResult
-                    {
-                        CardType = res.CardType,
-                        ValidationStatus = res.ValidationStatus,
-                    };
-                }
+                return new ValidationResult
+                {
+                    CardType = res.CardType,
+                    ValidationStatus = res.ValidationStatus,
+                };
             }
             catch (Exception e)
             {

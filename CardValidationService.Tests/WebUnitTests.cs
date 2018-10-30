@@ -1,4 +1,5 @@
-﻿using CardValidationService.Web.Controllers;
+﻿using CardValidationService.Repositories;
+using CardValidationService.Web.Controllers;
 using CardValidationService.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,10 +16,12 @@ namespace CardValidationService.Tests
 
         void WebTestCard(CardTestInfo cardInfo)
         {
-            var api = new CardValidationApiController();
-            var res = (ValidationResult)api.Validate(cardInfo.NumberString);
-            Assert.AreEqual(cardInfo.Type, res.CardType);
-            Assert.AreEqual(cardInfo.Status, res.ValidationStatus);
+            using (var api = new CardValidationApiController(new CardValidationServiceRepository()))
+            {
+                var res = (ValidationResult)api.Validate(cardInfo.NumberString);
+                Assert.AreEqual(cardInfo.Type, res.CardType);
+                Assert.AreEqual(cardInfo.Status, res.ValidationStatus);
+            }
         }
 
         [TestMethod]

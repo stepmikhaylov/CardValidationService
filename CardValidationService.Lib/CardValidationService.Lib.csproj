@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repositories\CardValidationServiceRepository.cs" />
     <Compile Include="Data\Card.cs">
       <DependentUpon>CardValidationServiceModel.tt</DependentUpon>
     </Compile>
@@ -86,6 +87,7 @@
       <DependentUpon>CardValidationServiceModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ICardValidationServiceRepository.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
